@@ -164,6 +164,13 @@ public class TypeDepthFirstVisitor implements TypeVisitor {
   }
 
   // Exp e1,e2;
+  public Type visit(Or n) {
+    n.e1.accept(this);
+    n.e2.accept(this);
+    return null;
+  }
+
+  // Exp e1,e2;
   public Type visit(LessThan n) {
     n.e1.accept(this);
     n.e2.accept(this);
