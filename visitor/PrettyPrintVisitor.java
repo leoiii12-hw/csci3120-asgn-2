@@ -254,6 +254,15 @@ public class PrettyPrintVisitor implements Visitor {
   }
 
   // Exp e1,e2;
+  public void visit(Divide n) {
+    System.out.print("(");
+    n.e1.accept(this);
+    System.out.print(" / ");
+    n.e2.accept(this);
+    System.out.print(")");
+  }
+
+  // Exp e1,e2;
   public void visit(ArrayLookup n) {
     n.e1.accept(this);
     System.out.print("[");
@@ -321,6 +330,12 @@ public class PrettyPrintVisitor implements Visitor {
   // Exp e;
   public void visit(Not n) {
     System.out.print("!");
+    n.e.accept(this);
+  }
+
+  // Exp e;
+  public void visit(UnaryMinus n) {
+    System.out.print("-");
     n.e.accept(this);
   }
 

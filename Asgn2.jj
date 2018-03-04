@@ -27,6 +27,7 @@ SPECIAL_TOKEN : /* COMMENTS */
 | <MULTI_LINE_COMMENT: "/*" (~["*"])* "*" ("*" | (~["*","/"] (~["*"])* "*"))* "/">
 }
 
+// no multiply
 TOKEN :
 {
   < LPAREN: "(" >
@@ -41,12 +42,14 @@ TOKEN :
 | < LT: "<" >
 | < PLUS: "+" >
 | < MINUS: "-" >
-| < AND : "&" >
-| < OR : "|" >
+| < TIMES: "*" >
+| < DIVIDE: "/" >
+| < POWER: "^^" >
+| < AND : "&&" >
+| < OR : "||" >
 | < NOT : "!" >
 | < BOOLEAN: "boolean" >
 | < CLASS: "class" >
-| < INTERFACE: "interface" >
 | < ELSE: "else" >
 | < EXTENDS: "extends" >
 | < FALSE: "false" >
@@ -378,6 +381,9 @@ Exp Expression() :
   LOOKAHEAD( PrimaryExpression() "*" )
   e=TimesExpression()
 |
+  LOOKAHEAD( PrimaryExpression() "/" )
+  e=DivideExpression()
+|
   LOOKAHEAD( PrimaryExpression() "[" )
   e=ArrayLookup()
 |
@@ -432,6 +438,13 @@ Exp TimesExpression() :
 {
   e1=PrimaryExpression() "*" e2=PrimaryExpression()
   { return new Times(e1,e2); }
+}
+
+Exp DivideExpression() :
+{ Exp e1,e2; }
+{
+  e1=PrimaryExpression() "/" e2=PrimaryExpression()
+  { return new Divide(e1,e2); }
 }
 
 Exp ArrayLookup() :
@@ -498,6 +511,8 @@ Exp PrimaryExpression() :
 |
   e=NotExpression()
 |
+  e=UnaryMinusExpression()
+|
   e=BracketExpression()
   )
   { return e; }
@@ -509,7 +524,6 @@ Exp IntegerLiteral() :
   t=<INTEGER_LITERAL>
   { return new IntegerLiteral(Integer.parseInt(t.image)); }
 }
-
 
 Exp TrueLiteral() :
 {}
@@ -558,6 +572,13 @@ Exp NotExpression() :
 {
   "!" e=Expression()
   { return new Not(e); }
+}
+
+Exp UnaryMinusExpression() :
+{ Exp e; }
+{
+  "-" e=Expression()
+  { return new UnaryMinus(e); }
 }
 
 Exp BracketExpression() :

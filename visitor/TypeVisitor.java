@@ -26,6 +26,7 @@ public interface TypeVisitor {
   public Type visit(Plus n);
   public Type visit(Minus n);
   public Type visit(Times n);
+  public Type visit(Divide n);
   public Type visit(ArrayLookup n);
   public Type visit(ArrayLength n);
   public Type visit(Call n);
@@ -37,5 +38,6 @@ public interface TypeVisitor {
   public Type visit(NewArray n);
   public Type visit(NewObject n);
   public Type visit(Not n);
+  public Type visit(UnaryMinus n);
   public Type visit(Identifier n);
 }

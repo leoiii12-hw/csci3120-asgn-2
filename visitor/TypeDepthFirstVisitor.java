@@ -199,6 +199,13 @@ public class TypeDepthFirstVisitor implements TypeVisitor {
   }
 
   // Exp e1,e2;
+  public Type visit(Divide n) {
+    n.e1.accept(this);
+    n.e2.accept(this);
+    return null;
+  }
+
+  // Exp e1,e2;
   public Type visit(ArrayLookup n) {
     n.e1.accept(this);
     n.e2.accept(this);
@@ -258,6 +265,12 @@ public class TypeDepthFirstVisitor implements TypeVisitor {
 
   // Exp e;
   public Type visit(Not n) {
+    n.e.accept(this);
+    return null;
+  }
+
+  // Exp e;
+  public Type visit(UnaryMinus n) {
     n.e.accept(this);
     return null;
   }
