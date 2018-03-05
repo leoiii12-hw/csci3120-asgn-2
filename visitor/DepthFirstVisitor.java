@@ -140,13 +140,13 @@ public class DepthFirstVisitor implements Visitor {
   }
 
   // Exp e1,e2;
-  public void visit(And n) {
+  public void visit(Or n) {
     n.e1.accept(this);
     n.e2.accept(this);
   }
 
   // Exp e1,e2;
-  public void visit(Or n) {
+  public void visit(And n) {
     n.e1.accept(this);
     n.e2.accept(this);
   }
@@ -177,6 +177,12 @@ public class DepthFirstVisitor implements Visitor {
 
   // Exp e1,e2;
   public void visit(Divide n) {
+    n.e1.accept(this);
+    n.e2.accept(this);
+  }
+
+  // Exp e1,e2;
+  public void visit(Power n) {
     n.e1.accept(this);
     n.e2.accept(this);
   }

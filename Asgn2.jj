@@ -55,6 +55,7 @@ TOKEN :
 | < FALSE: "false" >
 | < IF: "if" >
 | < WHILE: "while" >
+| < FOR: "for" >
 | < INTEGER: "int" >
 | < LENGTH: "length" >
 | < MAIN: "main" >
@@ -166,9 +167,10 @@ ClassDecl ClassDeclarationSimple() :
   MethodDeclList ml = new MethodDeclList();
 }
 {
-  "class" i=Identifier() "{" ( v=VarDeclaration()    { vl.addElement(v); } )*
-                             ( m=MethodDeclaration() { ml.addElement(m); } )*
-                       "}"
+  "class" i=Identifier() "{"
+    ( v=VarDeclaration()    { vl.addElement(v); } )*
+    ( m=MethodDeclaration() { ml.addElement(m); } )*
+  "}"
   { return new ClassDeclSimple(i,vl,ml); }
 }
 
@@ -180,10 +182,10 @@ ClassDecl ClassDeclarationExtends() :
   MethodDeclList ml = new MethodDeclList();
 }
 {
-  "class" i1=Identifier() "extends" i2=Identifier()
-                       "{"   ( v=VarDeclaration()    { vl.addElement(v); } )*
-                             ( m=MethodDeclaration() { ml.addElement(m); } )*
-                       "}"
+  "class" i1=Identifier() "extends" i2=Identifier() "{"
+    ( v=VarDeclaration()    { vl.addElement(v); } )*
+    ( m=MethodDeclaration() { ml.addElement(m); } )*
+  "}"
   { return new ClassDeclExtends(i1,i2,vl,ml); }
 }
 
@@ -208,10 +210,11 @@ MethodDecl MethodDeclaration() :
   Exp e;
 }
 {
-  "public" t=Type() i=Identifier()
-  "(" ( fl=FormalParameterList() )? ")"
-  "{" ( LOOKAHEAD(2) v=VarDeclaration() { vl.addElement(v); } )*
-      ( s=Statement() { sl.addElement(s); } )* "return" e=Expression() ";" "}"
+  "public" t=Type() i=Identifier() "(" ( fl=FormalParameterList() )? ")" "{"
+    ( LOOKAHEAD(2) v=VarDeclaration() { vl.addElement(v); } )*
+    ( s=Statement() { sl.addElement(s); } )*
+    "return" e=Expression() ";"
+  "}"
   { return new MethodDecl(t,i,fl,vl,sl,e); }
 }
 
@@ -285,6 +288,10 @@ Type IdentifierType() :
   { return new IdentifierType(t.image); }
 }
 
+/*
+ * Statement syntax follows.
+ */
+
 Statement Statement() :
 { Statement s; }
 {
@@ -300,6 +307,8 @@ Statement Statement() :
   s=IfStatement()
 |
   s=WhileStatement()
+|
+  s=ForStatement()
 |
   s=PrintStatement()
   )
@@ -352,6 +361,106 @@ Statement WhileStatement() :
   { return new While(e,s); }
 }
 
+// FOR
+
+Statement ForStatement() :
+{ StmtExpList sel1;
+  Exp e;
+  StmtExpList sel2;
+  Statement s;
+}
+{
+  "for" "(" sel1=ForInit() ";" e=Expression() ";" sel2=StmtExpList() ")" s=Statement()
+  { return new For(sel1,e,sel2,s); }
+}
+
+StmtExpList ForInit() :
+{ StmtExpList sl = new StmtExpList(); }
+{
+  (
+  LOOKAHEAD(2)
+  sl=LocalVariableDeclaration()
+|
+  LOOKAHEAD(2)
+  sl=StmtExpList()
+  )
+  { return sl; }
+}
+
+StmtExpList LocalVariableDeclaration() :
+{ Type t;
+  StmtExp se1,se2;
+  StmtExpList sel = new StmtExpList(); }
+{
+  t=Type() se1=VarDeclAssignStmtExp(t)
+  { sel.addElement(se1); }
+  ( se2=VarDeclAssignStmtExpRest(t) { sel.addElement(se2); })*
+  { return sel; }
+}
+
+StmtExp VarDeclAssignStmtExpRest(Type t) :
+{ StmtExp se; }
+{
+  "," se=VarDeclAssignStmtExp(t)
+  { return se; }
+}
+
+StmtExp VarDeclAssignStmtExp(Type t) :
+{ Identifier i;
+  Exp e; }
+{
+  i=Identifier() "=" e=Expression()
+  { return new VarDeclAssignStmtExp(t,i,e); }
+}
+
+StmtExpList StmtExpList() :
+{ StmtExp se1,se2;
+  StmtExpList sel = new StmtExpList(); }
+{
+  se1=StmtExp()
+  { sel.addElement(se1); }
+  ( se2=StmtExpRest() { sel.addElement(se2); })*
+  { return sel; }
+}
+
+StmtExp StmtExpRest() :
+{ StmtExp se; }
+{
+  "," se=StmtExp()
+  { return se; }
+}
+
+StmtExp StmtExp() :
+{ StmtExp se; }
+{
+  (
+  LOOKAHEAD(2)
+  se=AssignStmtExp()
+|
+  LOOKAHEAD(2)
+  se=ArrayAssignStmtExp()
+  )
+  { return se; }
+}
+
+StmtExp AssignStmtExp() :
+{ Identifier i;
+  Exp e; }
+{
+  i=Identifier() "=" e=Expression()
+  { return new AssignStmtExp(i,e); }
+}
+
+StmtExp ArrayAssignStmtExp() :
+{ Identifier i;
+  Exp e1,e2; }
+{
+  i=Identifier() "[" e1=Expression() "]" "=" e2=Expression()
+  { return new ArrayAssignStmtExp(i,e1,e2); }
+}
+
+// FOR
+
 Statement PrintStatement() :
 { Exp e; }
 {
@@ -359,15 +468,19 @@ Statement PrintStatement() :
   { return new Print(e); }
 }
 
+/*
+ * Expression syntax follows.
+ */
+
 Exp Expression() :
 { Exp e; }
 {
   (
-  LOOKAHEAD( PrimaryExpression() "&&" )
-  e=AndExpression()
-|
   LOOKAHEAD( PrimaryExpression() "||" )
   e=OrExpression()
+|
+  LOOKAHEAD( PrimaryExpression() "&&" )
+  e=AndExpression()
 |
   LOOKAHEAD( PrimaryExpression() "<" )
   e=CompareExpression()
@@ -384,6 +497,9 @@ Exp Expression() :
   LOOKAHEAD( PrimaryExpression() "/" )
   e=DivideExpression()
 |
+  LOOKAHEAD( PrimaryExpression() "^^" )
+  e=PowerExpression()
+|
   LOOKAHEAD( PrimaryExpression() "[" )
   e=ArrayLookup()
 |
@@ -398,18 +514,18 @@ Exp Expression() :
   { return e; }
 }
 
-Exp AndExpression() :
-{ Exp e1,e2; }
-{
-  e1=PrimaryExpression() "&&" e2=PrimaryExpression()
-  { return new And(e1,e2); }
-}
-
 Exp OrExpression() :
 { Exp e1,e2; }
 {
   e1=PrimaryExpression() "||" e2=PrimaryExpression()
   { return new Or(e1,e2); }
+}
+
+Exp AndExpression() :
+{ Exp e1,e2; }
+{
+  e1=PrimaryExpression() "&&" e2=PrimaryExpression()
+  { return new And(e1,e2); }
 }
 
 Exp CompareExpression() :
@@ -445,6 +561,13 @@ Exp DivideExpression() :
 {
   e1=PrimaryExpression() "/" e2=PrimaryExpression()
   { return new Divide(e1,e2); }
+}
+
+Exp PowerExpression() :
+{ Exp e1,e2; }
+{
+  e1=PrimaryExpression() "^^" e2=PrimaryExpression()
+  { return new Power(e1,e2); }
 }
 
 Exp ArrayLookup() :

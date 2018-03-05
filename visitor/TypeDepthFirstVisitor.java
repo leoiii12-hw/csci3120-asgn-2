@@ -157,14 +157,14 @@ public class TypeDepthFirstVisitor implements TypeVisitor {
   }
 
   // Exp e1,e2;
-  public Type visit(And n) {
+  public Type visit(Or n) {
     n.e1.accept(this);
     n.e2.accept(this);
     return null;
   }
 
   // Exp e1,e2;
-  public Type visit(Or n) {
+  public Type visit(And n) {
     n.e1.accept(this);
     n.e2.accept(this);
     return null;
@@ -200,6 +200,13 @@ public class TypeDepthFirstVisitor implements TypeVisitor {
 
   // Exp e1,e2;
   public Type visit(Divide n) {
+    n.e1.accept(this);
+    n.e2.accept(this);
+    return null;
+  }
+
+  // Exp e1,e2;
+  public Type visit(Power n) {
     n.e1.accept(this);
     n.e2.accept(this);
     return null;
