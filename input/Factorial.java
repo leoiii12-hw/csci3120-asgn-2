@@ -8,11 +8,26 @@ class Fac {
 
     public int ComputeFac(int num){
 	int num_aux ;
+
 	if (num < 1)
 	    num_aux = 1 ;
-	else 
+	else
 	    num_aux = num * (this.ComputeFac(num-1)) ;
+
+	for(int i = 2, b=3,c=   4; !(i < 10); i=i^^2) {
+			System.out.println(i);
+			System.out.println(i);
+			System.out.println(i);
+			System.out.println(i);
+		}
+
 	return num_aux ;
     }
+
+	public int ComputeFac2(int num int y){
+
+
+		return 1 ;
+	}
 
 }

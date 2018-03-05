@@ -2,18 +2,18 @@ package visitor;
 
 import syntaxtree.*;
 
-public class PrettyPrintVisitor implements Visitor {
+public class Task2Visitor implements Visitor {
 
   // MainClass m;
   // ClassDeclList cl;
   public void visit(Program n) {
     n.m.accept(this);
-    for ( int i = 0; i < n.cl.size(); i++ ) {
-        System.out.println();
-        n.cl.elementAt(i).accept(this);
+    for (int i = 0; i < n.cl.size(); i++) {
+      System.out.println();
+      n.cl.elementAt(i).accept(this);
     }
   }
-  
+
   // Identifier i1,i2;
   // Statement s;
   public void visit(MainClass n) {
@@ -25,6 +25,7 @@ public class PrettyPrintVisitor implements Visitor {
     System.out.println(") {");
     System.out.print("    ");
     n.s.accept(this);
+    System.out.println();
     System.out.println("  }");
     System.out.println("}");
   }
@@ -36,19 +37,21 @@ public class PrettyPrintVisitor implements Visitor {
     System.out.print("class ");
     n.i.accept(this);
     System.out.println(" { ");
-    for ( int i = 0; i < n.vl.size(); i++ ) {
-        System.out.print("  ");
-        n.vl.elementAt(i).accept(this);
-        if ( i+1 < n.vl.size() ) { System.out.println(); }
-    }
-    for ( int i = 0; i < n.ml.size(); i++ ) {
+    for (int i = 0; i < n.vl.size(); i++) {
+      System.out.print("  ");
+      n.vl.elementAt(i).accept(this);
+      if (i + 1 < n.vl.size()) {
         System.out.println();
-        n.ml.elementAt(i).accept(this);
+      }
+    }
+    for (int i = 0; i < n.ml.size(); i++) {
+      System.out.println();
+      n.ml.elementAt(i).accept(this);
     }
     System.out.println();
     System.out.println("}");
   }
- 
+
   // Identifier i;
   // Identifier j;
   // VarDeclList vl;
@@ -59,14 +62,16 @@ public class PrettyPrintVisitor implements Visitor {
     System.out.println(" extends ");
     n.j.accept(this);
     System.out.println(" { ");
-    for ( int i = 0; i < n.vl.size(); i++ ) {
-        System.out.print("  ");
-        n.vl.elementAt(i).accept(this);
-        if ( i+1 < n.vl.size() ) { System.out.println(); }
-    }
-    for ( int i = 0; i < n.ml.size(); i++ ) {
+    for (int i = 0; i < n.vl.size(); i++) {
+      System.out.print("  ");
+      n.vl.elementAt(i).accept(this);
+      if (i + 1 < n.vl.size()) {
         System.out.println();
-        n.ml.elementAt(i).accept(this);
+      }
+    }
+    for (int i = 0; i < n.ml.size(); i++) {
+      System.out.println();
+      n.ml.elementAt(i).accept(this);
     }
     System.out.println();
     System.out.println("}");
@@ -93,20 +98,24 @@ public class PrettyPrintVisitor implements Visitor {
     System.out.print(" ");
     n.i.accept(this);
     System.out.print(" (");
-    for ( int i = 0; i < n.fl.size(); i++ ) {
-        n.fl.elementAt(i).accept(this);
-        if (i+1 < n.fl.size()) { System.out.print(", "); }
+    for (int i = 0; i < n.fl.size(); i++) {
+      n.fl.elementAt(i).accept(this);
+      if (i + 1 < n.fl.size()) {
+        System.out.print(", ");
+      }
     }
     System.out.println(") { ");
-    for ( int i = 0; i < n.vl.size(); i++ ) {
-        System.out.print("    ");
-        n.vl.elementAt(i).accept(this);
-        System.out.println("");
+    for (int i = 0; i < n.vl.size(); i++) {
+      System.out.print("    ");
+      n.vl.elementAt(i).accept(this);
+      System.out.println("");
     }
-    for ( int i = 0; i < n.sl.size(); i++ ) {
-        System.out.print("    ");
-        n.sl.elementAt(i).accept(this);
-        if ( i < n.sl.size() ) { System.out.println(""); }
+    for (int i = 0; i < n.sl.size(); i++) {
+      System.out.print("    ");
+      n.sl.elementAt(i).accept(this);
+      if (i < n.sl.size()) {
+        System.out.println("");
+      }
     }
     System.out.print("    return ");
     n.e.accept(this);
@@ -142,10 +151,10 @@ public class PrettyPrintVisitor implements Visitor {
   // StatementList sl;
   public void visit(Block n) {
     System.out.println("{ ");
-    for ( int i = 0; i < n.sl.size(); i++ ) {
-        System.out.print("      ");
-        n.sl.elementAt(i).accept(this);
-        System.out.println();
+    for (int i = 0; i < n.sl.size(); i++) {
+      System.out.print("      ");
+      n.sl.elementAt(i).accept(this);
+      System.out.println();
     }
     System.out.print("    } ");
   }
@@ -153,14 +162,15 @@ public class PrettyPrintVisitor implements Visitor {
   // Exp e;
   // Statement s1,s2;
   public void visit(If n) {
-    System.out.print("if (");
+    System.out.println();
+    System.out.print("    if (");
     n.e.accept(this);
-    System.out.println(") ");
-    System.out.print("    ");
+    System.out.print(") ");
     n.s1.accept(this);
     System.out.println();
     System.out.print("    else ");
     n.s2.accept(this);
+    System.out.println();
   }
 
   // Exp e;
@@ -178,7 +188,7 @@ public class PrettyPrintVisitor implements Visitor {
     n.e.accept(this);
     System.out.print(");");
   }
-  
+
   // Identifier i;
   // Exp e;
   public void visit(Assign n) {
@@ -197,6 +207,15 @@ public class PrettyPrintVisitor implements Visitor {
     System.out.print("] = ");
     n.e2.accept(this);
     System.out.print(";");
+  }
+
+  // Exp e1,e2;
+  public void visit(Or n) {
+    System.out.print("(");
+    n.e1.accept(this);
+    System.out.print(" || ");
+    n.e2.accept(this);
+    System.out.print(")");
   }
 
   // Exp e1,e2;
@@ -245,6 +264,24 @@ public class PrettyPrintVisitor implements Visitor {
   }
 
   // Exp e1,e2;
+  public void visit(Divide n) {
+    System.out.print("(");
+    n.e1.accept(this);
+    System.out.print(" / ");
+    n.e2.accept(this);
+    System.out.print(")");
+  }
+
+  // Exp e1,e2;
+  public void visit(Power n) {
+    System.out.print("(");
+    n.e1.accept(this);
+    System.out.print(" ^^ ");
+    n.e2.accept(this);
+    System.out.print(")");
+  }
+
+  // Exp e1,e2;
   public void visit(ArrayLookup n) {
     n.e1.accept(this);
     System.out.print("[");
@@ -266,9 +303,11 @@ public class PrettyPrintVisitor implements Visitor {
     System.out.print(".");
     n.i.accept(this);
     System.out.print("(");
-    for ( int i = 0; i < n.el.size(); i++ ) {
-        n.el.elementAt(i).accept(this);
-        if ( i+1 < n.el.size() ) { System.out.print(", "); }
+    for (int i = 0; i < n.el.size(); i++) {
+      n.el.elementAt(i).accept(this);
+      if (i + 1 < n.el.size()) {
+        System.out.print(", ");
+      }
     }
     System.out.print(")");
   }
@@ -311,12 +350,80 @@ public class PrettyPrintVisitor implements Visitor {
 
   // Exp e;
   public void visit(Not n) {
-    System.out.print("!");
+    System.out.print("(!");
     n.e.accept(this);
+    System.out.print(")");
+  }
+
+  // Exp e;
+  public void visit(UnaryMinus n) {
+    System.out.print("(-");
+    n.e.accept(this);
+    System.out.print(")");
   }
 
   // String s;
   public void visit(Identifier n) {
     System.out.print(n.s);
+  }
+
+  public void visit(For n) {
+    System.out.print("for (");
+
+    if (n.sel1.size() > 0) {
+      VarDeclAssignStmtExp vdase = (VarDeclAssignStmtExp) n.sel1.elementAt(0);
+      vdase.t.accept(this);
+
+      System.out.print(" ");
+
+      for (int i = 0; i < n.sel1.size(); i++) {
+        n.sel1.elementAt(i).accept(this);
+        if (i + 1 < n.sel1.size()) {
+          System.out.print(", ");
+        }
+      }
+    }
+
+    System.out.print("; ");
+
+    n.e.accept(this);
+
+    System.out.print("; ");
+
+    if (n.sel2.size() > 0) {
+      for (int i = 0; i < n.sel2.size(); i++) {
+        n.sel2.elementAt(i).accept(this);
+        if (i + 1 < n.sel2.size()) {
+          System.out.print(", ");
+        }
+      }
+    }
+
+    System.out.print(") ");
+
+    n.s.accept(this);
+  }
+
+  @Override
+  public void visit(VarDeclAssignStmtExp n) {
+    n.i.accept(this);
+    System.out.print(" = ");
+    n.e.accept(this);
+  }
+
+  @Override
+  public void visit(AssignStmtExp n) {
+    n.i.accept(this);
+    System.out.print(" = ");
+    n.e.accept(this);
+  }
+
+  @Override
+  public void visit(ArrayAssignStmtExp n) {
+    n.i.accept(this);
+    System.out.print("[");
+    n.e1.accept(this);
+    System.out.print("] = ");
+    n.e2.accept(this);
   }
 }

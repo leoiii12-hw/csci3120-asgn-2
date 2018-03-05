@@ -693,14 +693,14 @@ Exp AllocationExpression() :
 Exp NotExpression() :
 { Exp e; }
 {
-  "!" e=Expression()
+  "!" e=PrimaryExpression()
   { return new Not(e); }
 }
 
 Exp UnaryMinusExpression() :
 { Exp e; }
 {
-  "-" e=Expression()
+  "-" e=PrimaryExpression()
   { return new UnaryMinus(e); }
 }
 
