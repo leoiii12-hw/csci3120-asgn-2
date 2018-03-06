@@ -6,8 +6,10 @@ class Factorial {
 
 class Fac {
 
-    public int ComputeFac(int num, y, x, char x, y int x) {
+  public int ComputeFac(int num, y, x, char x, y int x) {
     int num_aux;
+
+    num_aux = 1 + 1 + 1 + 1 ^^-2 ^^2 / 2 * (a[1] + b.length);
 
     if (num < 1)
       num_aux = 1;
@@ -24,22 +26,22 @@ class Fac {
     return num_aux;
   }
 
-      public int c1(int x        (, int y, (*j) {
+  public int c1(int x        (, int y, (*j) {
 
     return 1;
   }
 
-      public int c2(int x, int k,     (*j) {
+  public int c2(int x, int k,     (*j) {
 
     return 1;
-     }
+  }
 
-      public int c3((int x, int y, int j) {
+  public int c3((int x, int y, int j) {
 
     return 1;
-   }
+  }
 
-      public int c4(int   x, int y,         ++j) {
+  public int c4(int x, int y,         ++j) {
 
     return 1;
   }
