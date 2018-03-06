@@ -7,7 +7,11 @@ PARSER_BEGIN(MiniJavaParser)
   package myparser;
 
   import syntaxtree.*;
-  public class MiniJavaParser {}
+  public class MiniJavaParser {
+
+    static private Type currentTypeInFormalParameterList;
+
+  }
 
 PARSER_END(MiniJavaParser)
 
@@ -229,19 +233,37 @@ FormalList FormalParameterList() :
 }
 
 Formal FormalParameter() :
-{ Type t;
-  Identifier i;
-}
+{ Identifier i; }
 {
-  t=Type() i=Identifier()
-  { return new Formal(t,i); }
+  currentTypeInFormalParameterList=Type() i=Identifier()
+  { return new Formal(currentTypeInFormalParameterList,i); }
+}
+
+Formal InformalParameter() :
+{ Identifier i; }
+{
+  i=Identifier()
+  { return new Formal(currentTypeInFormalParameterList,i); }
 }
 
 Formal FormalParameterRest() :
 { Formal f; }
 {
+  (
+  LOOKAHEAD("," FormalParameter())
   "," f=FormalParameter()
   { return f; }
+|
+  LOOKAHEAD("," InformalParameter())
+  ","
+  { System.out.println("identifier expected, begin at line " + token.next.beginLine + ", begin at column " + token.next.beginColumn); }
+  f=InformalParameter()
+  { return f; }
+|
+  { System.out.println(", expected, begin at line " + token.next.beginLine + ", begin at column " + token.next.beginColumn); }
+  f=FormalParameter()
+  { return f; }
+  )
 }
 
 Type Type() :

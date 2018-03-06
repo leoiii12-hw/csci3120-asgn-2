@@ -156,6 +156,11 @@ public class TypeDepthFirstVisitor implements TypeVisitor {
     return null;
   }
 
+  @Override
+  public Type visit(Or n) {
+    return null;
+  }
+
   // Exp e1,e2;
   public Type visit(And n) {
     n.e1.accept(this);
@@ -188,6 +193,16 @@ public class TypeDepthFirstVisitor implements TypeVisitor {
   public Type visit(Times n) {
     n.e1.accept(this);
     n.e2.accept(this);
+    return null;
+  }
+
+  @Override
+  public Type visit(Divide n) {
+    return null;
+  }
+
+  @Override
+  public Type visit(Power n) {
     return null;
   }
 
@@ -255,8 +270,33 @@ public class TypeDepthFirstVisitor implements TypeVisitor {
     return null;
   }
 
+  @Override
+  public Type visit(UnaryMinus n) {
+    return null;
+  }
+
   // String s;
   public Type visit(Identifier n) {
+    return null;
+  }
+
+  @Override
+  public Type visit(For n) {
+    return null;
+  }
+
+  @Override
+  public Type visit(VarDeclAssignStmtExp n) {
+    return null;
+  }
+
+  @Override
+  public Type visit(AssignStmtExp n) {
+    return null;
+  }
+
+  @Override
+  public Type visit(ArrayAssignStmtExp n) {
     return null;
   }
 }

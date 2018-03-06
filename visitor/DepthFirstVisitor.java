@@ -139,6 +139,11 @@ public class DepthFirstVisitor implements Visitor {
     n.e2.accept(this);
   }
 
+  @Override
+  public void visit(Or n) {
+
+  }
+
   // Exp e1,e2;
   public void visit(And n) {
     n.e1.accept(this);
@@ -167,6 +172,16 @@ public class DepthFirstVisitor implements Visitor {
   public void visit(Times n) {
     n.e1.accept(this);
     n.e2.accept(this);
+  }
+
+  @Override
+  public void visit(Divide n) {
+
+  }
+
+  @Override
+  public void visit(Power n) {
+
   }
 
   // Exp e1,e2;
@@ -222,7 +237,32 @@ public class DepthFirstVisitor implements Visitor {
     n.e.accept(this);
   }
 
+  @Override
+  public void visit(UnaryMinus n) {
+
+  }
+
   // String s;
   public void visit(Identifier n) {
+  }
+
+  @Override
+  public void visit(For n) {
+
+  }
+
+  @Override
+  public void visit(VarDeclAssignStmtExp n) {
+
+  }
+
+  @Override
+  public void visit(AssignStmtExp n) {
+
+  }
+
+  @Override
+  public void visit(ArrayAssignStmtExp n) {
+
   }
 }
