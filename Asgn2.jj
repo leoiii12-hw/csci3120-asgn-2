@@ -214,7 +214,15 @@ MethodDecl MethodDeclaration() :
   Exp e;
 }
 {
-  "public" t=Type() i=Identifier() "(" ( fl=FormalParameterList() )? ")" "{"
+  "public" t=Type() i=Identifier()
+
+  try {
+    "(" ( fl=FormalParameterList() )? ")"
+  } catch (ParseException pe) {
+    error_skipto("invalid formal parameter list", RPAREN);
+  }
+
+  "{"
     ( LOOKAHEAD(2) v=VarDeclaration() { vl.addElement(v); } )*
     ( s=Statement() { sl.addElement(s); } )*
     "return" e=Expression() ";"
@@ -227,8 +235,13 @@ FormalList FormalParameterList() :
   Formal f;
 }
 {
-  f=FormalParameter() { fl.addElement(f); }
-  ( f=FormalParameterRest() { fl.addElement(f); } )*
+  try {
+    f=FormalParameter() { fl.addElement(f); }
+    ( f=FormalParameterRest() { fl.addElement(f); } )*
+  } catch (ParseException pe) {
+    error_skipbefore("invalid formal parameter list", RPAREN);
+  }
+
   { return fl; }
 }
 
@@ -252,18 +265,17 @@ Formal FormalParameterRest() :
   (
   LOOKAHEAD("," FormalParameter())
   "," f=FormalParameter()
-  { return f; }
 |
   LOOKAHEAD("," InformalParameter())
   ","
   { System.out.println("identifier expected, begin at line " + token.next.beginLine + ", begin at column " + token.next.beginColumn); }
   f=InformalParameter()
-  { return f; }
 |
   { System.out.println(", expected, begin at line " + token.next.beginLine + ", begin at column " + token.next.beginColumn); }
   f=FormalParameter()
-  { return f; }
   )
+
+  { return f; }
 }
 
 Type Type() :
@@ -740,3 +752,32 @@ Identifier Identifier() :
   { return new Identifier(t.image); }
 }
 
+JAVACODE
+void error_skipbefore(String message, int kind) {
+  ParseException e = generateParseException();
+  System.out.println(message + ", begin at line " + token.next.beginLine + ", begin at column " + token.next.beginColumn);
+
+  do {
+    getNextToken();
+    jj_ntk();
+
+    if (token.next.kind == kind)
+        break;
+
+  } while (true);
+}
+
+JAVACODE
+void error_skipto(String message, int kind) {
+  ParseException e = generateParseException();
+  System.out.println(message + ", begin at line " + token.next.beginLine + ", begin at column " + token.next.beginColumn);
+
+  do {
+    getNextToken();
+    jj_ntk();
+
+    if (token.kind == kind)
+       break;
+
+  } while (true);
+}
