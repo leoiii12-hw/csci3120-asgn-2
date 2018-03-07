@@ -8,7 +8,6 @@ public class Main {
             Program root = new MiniJavaParser(System.in).Goal();
             root.accept(new Task2Visitor());
         } catch (ParseException e) {
-            e.printStackTrace();
             System.out.println(e.toString());
         }
     }
