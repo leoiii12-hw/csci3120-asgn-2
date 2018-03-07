@@ -6,7 +6,7 @@ class Factorial {
 
 class Fac {
 
-  public int ComputeFac(int num, y, x, char x, y int x) {
+  public int ComputeFac(int num, y, x, char z1, z2 int z3) {
     int num_aux;
 
     num_aux = 1 + 2 + 3 + 1 ^^2 ^^3 ^^4 / 5 * (a[1] + b.length);
