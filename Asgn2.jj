@@ -544,10 +544,10 @@ Exp CompareExpression() :
 {
   e1=PlusExpression()
 
-  (
+  [
     "<" e2=PlusExpression()
     { e1 = new LessThan(e1,e2); }
-  )*
+  ]
 
   { return e1; }
 }
@@ -610,7 +610,8 @@ Exp PowerExpression() :
   e1=ArrayLookup()
 
   (
-    "^^" e2=ArrayLookup()
+    LOOKAHEAD("^^" PowerExpression())
+    "^^" e2=PowerExpression()
     { e1 = new Power(e1,e2); }
   )*
 

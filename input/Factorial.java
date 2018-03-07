@@ -9,7 +9,9 @@ class Fac {
   public int ComputeFac(int num, y, x, char x, y int x) {
     int num_aux;
 
-    num_aux = 1 + 1 + 1 + 1 ^^-2 ^^2 / 2 * (a[1] + b.length);
+    num_aux = 1 + 2 + 3 + 1 ^^2 ^^3 ^^4 / 5 * (a[1] + b.length);
+    num_aux = 1 + 1;
+    num_aux = -1 + 1 * 2 * 3 || 1 && 2 < 3;
 
     if (num < 1)
       num_aux = 1;
