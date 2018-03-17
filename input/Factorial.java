@@ -18,7 +18,7 @@ class Fac {
     else
       num_aux = num * (this.ComputeFac(num - 1));
 
-    for (int i = 2, b = 3, c = 4; !(i < 10); i = i ^^2){
+    for (int i = 2, b = 3, c = 4; !(i < 10); i = i ^^-2){
       System.out.println(i);
       System.out.println(i);
       System.out.println(i);
